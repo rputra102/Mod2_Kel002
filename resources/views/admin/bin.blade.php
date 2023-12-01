@@ -1,18 +1,9 @@
 @extends('admin.layout')
-
 @section('content')
 
+<h4 class="mt-5">Bin Kaset</h4>
 
-<h4 class="mt-5">Transaksi</h4>
 
-<a href="{{ route('admin.create') }}" type="button" class="btn btn-success rounded-3">Tambah Data</a>
-<!-- <a href="{{ route('admin.descend') }}" type="button" class="btn btn-success rounded-3">Sortir DESC</a>
-<a href="{{ route('admin.ascend') }}" type="button" class="btn btn-success rounded-3">Sortir ASC</a> -->
-<div class="dropdown">
-  <button class="dropbtn">Sortir Data</button>
-  <div class="dropdown-content">
-    <a href="{{ route('admin.ascend') }}">Ascending</a>
-    <a href="{{ route('admin.descend') }}">Descending</a>
     <style>
     /* Dropdown Button */
 
@@ -78,35 +69,29 @@
 <table class="table table-hover mt-2">
     <thead>
         <tr>
-            <th>id_rental</th>
-            <th>nama_renter</th>
-            <th>id_kaset</th>
-            <th>band</th>
-            <th>nama_staff</th>
-            <th>tanggal_transaksi</th>
+            <th>ID Kaset</th>
+            <th>Genre</th>
+            <th>Band</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($datas as $data)
         <tr>
-            <td>{{ $data->id_rental }}</td>
-            <td>{{ $data->nama_renter }}</td>
             <td>{{ $data->id_kaset }}</td>
+            <td>{{ $data->genre }}</td>
             <td>{{ $data->band }}</td>
-            <td>{{ $data->nama_staff }}</td>
-            <td>{{ $data->tanggal_transaksi }}</td>
             <td>
-                <!-- <a href="{{ route('admin.edit', $data->id_rental) }}" type="button"
-                    class="btn btn-warning rounded-3">Ubah</a> -->
+                <a href="{{ route('kaset.restore', $data->id_kaset) }}" type="button"
+                    class="btn btn-success rounded-3">Restore</a>
 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#hapusModal{{ $data->id_rental }}">
+                    data-bs-target="#hapusModal{{ $data->id_kaset }}">
                     Hapus
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="hapusModal{{ $data->id_rental }}" tabindex="-1"
+                <div class="modal fade" id="hapusModal{{ $data->id_kaset }}" tabindex="-1"
                     aria-labelledby="hapusModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -115,7 +100,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
-                            <form method="POST" action="{{ route('admin.delete', $data->id_rental) }}">
+                            <form method="POST" action="{{ route('kaset.delete', $data->id_kaset) }}">
                                 @csrf
                                 <div class="modal-body">
                                     Apakah anda yakin ingin menghapus data ini?

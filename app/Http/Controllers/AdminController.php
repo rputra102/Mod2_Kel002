@@ -10,30 +10,31 @@ class AdminController extends Controller
 {
     public function create()
     {
-        return view('admin.add');
+        $data = new \stdClass(); // Creating an empty object
+        $data->tanggal_transaksi = now(); // Assigning the current timestamp or an appropriate default value
+
+    return view('admin.add')->with('data', $data);
     }
 
     // public function store the value to a table
     public function store(Request $request)
     {
         $request->validate([
-            'no_VIN' => 'required',
-            'model' => 'required',
-            'tahun_produksi' => 'required',
-            'warna' => 'required',
-            'harga' => 'required',
-            'id_pabrik' => 'required',
+            'id_rental' => 'required',
+            'id_pelanggan' => 'required',
+            'id_kaset' => 'required',
+            'id_staff' => 'required',
+            'tanggal_transaksi' => 'required',
         ]);
 
         DB::insert(
-            'INSERT INTO mobil(no_VIN,model, tahun_produksi, warna, harga, id_pabrik) VALUES (:no_VIN, :model, :tahun_produksi, :warna, :harga, :id_pabrik)',
+            'INSERT INTO rental (id_rental, id_pelanggan, id_kaset, id_staff, tanggal_transaksi) VALUES (:id_rental, :id_pelanggan, :id_kaset, :id_staff, :tanggal_transaksi)',
             [
-                'no_VIN' => $request->no_VIN,
-                'model' => $request->model,
-                'tahun_produksi' => $request->tahun_produksi,
-                'warna' => $request->warna,
-                'harga' => $request->harga,
-                'id_pabrik' => $request->id_pabrik,
+                'id_rental' => $request->id_rental,
+                'id_pelanggan' => $request->id_pelanggan,
+                'id_kaset' => $request->id_kaset,
+                'id_staff' => $request->id_staff,
+                'tanggal_transaksi' => $request->tanggal_transaksi,
             ]
         );
         return redirect()->route('admin.index')->with('success', 'Data berhasil disimpan');
@@ -42,20 +43,35 @@ class AdminController extends Controller
     // public function show all values from a table
     public function index()
     {
-        $datas = DB::select('SELECT M.no_VIN, M.model, M.tahun_produksi, M.warna, M.harga, P.id_pabrik, P.lokasi, P.inspektur FROM mobil M INNER JOIN pabrik P ON M.id_pabrik = P.id_pabrik',);
+        $datas = DB::select('SELECT A.id_rental, A.tanggal_transaksi, M.id_pelanggan, M.nama_renter, P.id_kaset, P.genre, P.band, S.id_staff, S.nama_staff FROM rental A INNER JOIN pelanggan M ON A.id_pelanggan = M.id_pelanggan INNER JOIN kaset P ON A.id_kaset = P.id_kaset INNER JOIN staff S ON A.id_staff = S.id_staff ');
         return view('admin.index')->with('datas', $datas);
         // $datas = DB::table('mobil')->orderBy('no_VIN', 'desc')->get();
     } 
+
+    public function bin()
+    {
+        $datas = DB::select('SELECT * FROM kaset WHERE status = "NAV"');
+        return view('admin.bin')->with('datas', $datas);
+        // $datas = DB::table('mobil')->orderBy('no_VIN', 'desc')->get();
+    } 
+
+    public function bindua()
+    {
+        $datas = DB::select('SELECT * FROM staff WHERE status = "NAV"');
+        return view('admin.bindua')->with('datas', $datas);
+        // $datas = DB::table('mobil')->orderBy('no_VIN', 'desc')->get();
+    } 
+
     public function ascend()
 {
-    $datas = DB::select('SELECT M.no_VIN, M.model, M.tahun_produksi, M.warna, M.harga, P.id_pabrik, P.lokasi, P.inspektur FROM mobil M INNER JOIN pabrik P ON M.id_pabrik = P.id_pabrik ORDER BY M.no_VIN ASC');
+    $datas = DB::select('SELECT A.id_rental, A.tanggal_transaksi, M.id_pelanggan, M.nama_renter, P.id_kaset, P.genre, P.band, S.id_staff, S.nama_staff FROM rental A INNER JOIN pelanggan M ON A.id_pelanggan = M.id_pelanggan INNER JOIN kaset P ON A.id_kaset = P.id_kaset INNER JOIN staff S ON A.id_staff = S.id_staff ORDER BY A.id_rental ASC');
 
     return view('admin.index', ['datas' => $datas]);
 }
 
     public function descend()
 {
-    $datas = DB::select('SELECT M.no_VIN, M.model, M.tahun_produksi, M.warna, M.harga, P.id_pabrik, P.lokasi, P.inspektur FROM mobil M INNER JOIN pabrik P ON M.id_pabrik = P.id_pabrik ORDER BY M.no_VIN DESC');
+    $datas = DB::select('SELECT A.id_rental, A.tanggal_transaksi, M.id_pelanggan, M.nama_renter, P.id_kaset, P.genre, P.band, S.id_staff, S.nama_staff FROM rental A INNER JOIN pelanggan M ON A.id_pelanggan = M.id_pelanggan INNER JOIN kaset P ON A.id_kaset = P.id_kaset INNER JOIN staff S ON A.id_staff = S.id_staff ORDER BY A.id_rental DESC');
 
     return view('admin.index', ['datas' => $datas]);
 }
@@ -63,7 +79,8 @@ class AdminController extends Controller
     // public function edit a row from a table
     public function edit($id)
     {
-        $data = DB::table('mobil')->where('no_VIN', $id)->first();
+        $datas = DB::select('SELECT * FROM rental WHERE id_rental = :id', ['id' => $id]);
+        $data = $datas[0];
         return view('admin.edit')->with('data', $data);
     }
 
@@ -71,12 +88,11 @@ class AdminController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'no_VIN' => 'required',
-            'model' => 'required',
-            'tahun_produksi' => 'required',
-            'warna' => 'required',
-            'harga' => 'required',
-            'id_pabrik' => 'required',
+            'id_rental' => 'required',
+            'id_pelanggan' => 'required',
+            'id_kaset' => 'required',
+            'id_staff' => 'required',
+            'tanggal_transaksi' => 'required',
         ]);
 
         // DB::update(
@@ -92,22 +108,19 @@ class AdminController extends Controller
         // );
 
         DB::statement("
-        UPDATE mobil 
-        SET no_VIN = :new_no_VIN, 
-            model = :new_model, 
-            tahun_produksi = :new_tahun_produksi, 
-            warna = :new_warna, 
-            harga = :new_harga, 
-            id_pabrik = :new_id_pabrik 
-        WHERE no_VIN = :old_no_VIN;
+        UPDATE rental 
+        SET id_rental = :new_id_rental, 
+            id_pelanggan = :new_id_pelanggan, 
+            id_kaset = :new_id_kaset, 
+            id_staff = :new_id_staff, 
+            tanggal_transaksi = :new_tanggal_transaksi, 
+        WHERE id_rental = :old_id_rental;
     ", [
-        'new_no_VIN' => $request->input('no_VIN'),
-        'new_model' => $request->input('model'),
-        'new_tahun_produksi' => $request->input('tahun_produksi'),
-        'new_warna' => $request->input('warna'),
-        'new_harga' => $request->input('harga'),
-        'new_id_pabrik' => $request->input('id_pabrik'),
-        'old_no_VIN' => $id,
+        'new_id_rental' => $request->input('id_rental'),
+        'new_id_pelanggan' => $request->input('id_pelanggan'),
+        'new_id_kaset' => $request->input('id_kaset'),
+        'new_id_staff' => $request->input('id_staff'),
+        'new_tanggal_transaksi' => $request->input('tanggal_transaksi'),
     ]);
 
         return redirect()->route('admin.index')->with('success', 'Data berhasil diubah');
@@ -116,7 +129,7 @@ class AdminController extends Controller
     // public function to delete a row from a table
     public function delete($id)
     {
-        DB::delete('DELETE FROM mobil WHERE no_VIN = :no_VIN', ['no_VIN' => $id]);
+        DB::delete('DELETE FROM rental WHERE id_rental = :id_rental', ['id_rental' => $id]);
         return redirect()->route('admin.index')->with('success', 'Data berhasil dihapus');
     }
 }

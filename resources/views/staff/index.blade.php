@@ -1,25 +1,23 @@
-@extends('admin.layout')
+@extends('staff.layout')
 
 @section('content')
 
 
-<h4 class="mt-5">Transaksi</h4>
+<h4 class="mt-5">Staff</h4>
 
-<a href="{{ route('admin.create') }}" type="button" class="btn btn-success rounded-3">Tambah Data</a>
-<!-- <a href="{{ route('admin.descend') }}" type="button" class="btn btn-success rounded-3">Sortir DESC</a>
-<a href="{{ route('admin.ascend') }}" type="button" class="btn btn-success rounded-3">Sortir ASC</a> -->
+<a href="{{ route('staff.create') }}" type="button" class="btn btn-success rounded-3">Tambah Data</a>
 <div class="dropdown">
   <button class="dropbtn">Sortir Data</button>
   <div class="dropdown-content">
-    <a href="{{ route('admin.ascend') }}">Ascending</a>
-    <a href="{{ route('admin.descend') }}">Descending</a>
+    <a href="{{ route('staff.ascend') }}">Ascending</a>
+    <a href="{{ route('staff.descend') }}">Descending</a>
     <style>
     /* Dropdown Button */
 
     .wrapper {
         background: url('https://img.freepik.com/free-photo/artistic-blurry-colorful-wallpaper-background_58702-8546.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1696982400&semt=ais');
         display: cover;
-    }
+    }   
 
     .dropbtn {
     background-color: #00000d;
@@ -78,35 +76,29 @@
 <table class="table table-hover mt-2">
     <thead>
         <tr>
-            <th>id_rental</th>
-            <th>nama_renter</th>
-            <th>id_kaset</th>
-            <th>band</th>
-            <th>nama_staff</th>
-            <th>tanggal_transaksi</th>
+            <th>ID Staff</th>
+            <th>Nama Staff</th>
+            <th>Kontak Staff</th>
         </tr>
     </thead>
     <tbody>
         @foreach ($datas as $data)
         <tr>
-            <td>{{ $data->id_rental }}</td>
-            <td>{{ $data->nama_renter }}</td>
-            <td>{{ $data->id_kaset }}</td>
-            <td>{{ $data->band }}</td>
+            <td>{{ $data->id_staff }}</td>
             <td>{{ $data->nama_staff }}</td>
-            <td>{{ $data->tanggal_transaksi }}</td>
+            <td>{{ $data->kontak_staff }}</td>
             <td>
-                <!-- <a href="{{ route('admin.edit', $data->id_rental) }}" type="button"
-                    class="btn btn-warning rounded-3">Ubah</a> -->
+                <a href="{{ route('staff.edit', $data->id_staff) }}" type="button"
+                    class="btn btn-warning rounded-3">Ubah</a>
 
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#hapusModal{{ $data->id_rental }}">
+                    data-bs-target="#hapusModal{{ $data->id_staff }}">
                     Hapus
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="hapusModal{{ $data->id_rental }}" tabindex="-1"
+                <div class="modal fade" id="hapusModal{{ $data->id_staff }}" tabindex="-1"
                     aria-labelledby="hapusModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -115,7 +107,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
-                            <form method="POST" action="{{ route('admin.delete', $data->id_rental) }}">
+                            <form method="POST" action="{{ route('staff.softdelete', $data->id_staff) }}">
                                 @csrf
                                 <div class="modal-body">
                                     Apakah anda yakin ingin menghapus data ini?

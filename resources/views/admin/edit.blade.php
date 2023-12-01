@@ -1,14 +1,11 @@
 @extends('admin.layout')
-
 @section('content')
 
 @if($errors->any())
 <div class="alert alert-danger">
     <ul>
         @foreach($errors->all() as $error)
-
         <li>{{ $error }}</li>
-
         @endforeach
     </ul>
 </div>
@@ -16,40 +13,55 @@
 
 <div class="card mt-4">
     <div class="card-body">
-        <h5 class="card-title fw-bolder mb-3">Ubah Data</h5>
-        <form method="post" action="{{ route('admin.update', $data->no_VIN) }}">
+        <h5 class="card-title fw-bolder mb-3">Tambah</h5>
+        <form method="post" action="{{route('admin.store')}}">
             @csrf
             <div class="mb-3">
-                <label for="no_VIN" class="form-label">Nomor VIN</label>
-                <input type="text" class="form-control" id="no_VIN" name="no_VIN" value="{{ $data->no_VIN }}">
+                <label for="tanggal_transaksi" class="form-label">Tanggal_Transaksi</label>
+                <input type="text" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" value={{$data->tanggal_transaksi}}>
             </div>
             <div class="mb-3">
-                <label for="Model" class="form-label">Model</label>
-                <input type="text" class="form-control" id="model" name="model"
-                    value="{{ $data->model }}">
+                <label for="ID_Rental" class="form-label">ID Rental</label>
+                <input type="text" class="form-control" id="id_rental" name="id_rental">
             </div>
             <div class="mb-3">
-                <label for="Tahun Produksi" class="form-label">Tahun Produksi</label>
-                <input type="text" class="form-control" id="tahun_produksi" name="tahun_produksi" value="{{ $data->tahun_produksi }}">
+                <label for="id_pelanggan" class="form-label">ID_Renter</label>
+                <input type="text" class="form-control" id="id_pelanggan" name="id_pelanggan">
             </div>
             <div class="mb-3">
-                <label for="Warna" class="form-label">Warna</label>
-                <input type="text" class="form-control" id="warna" name="warna" value="{{ $data->warna }}">
+                <label for="nama_renter" class="form-label">Nama Renter</label>
+                <input type="text" class="form-control" id="nama_renter" name="nama_renter">
             </div>
             <div class="mb-3">
-                <label for="Harga" class="form-label">Harga</label>
-                <input type="text" class="form-control" id="harga" name="harga" value="{{ $data->harga }}">
+                <label for="id_kaset" class="form-label">Kaset</label>
+                <select class="form-control" id="id_kaset" name="id_kaset">
+                    <option disabled selected></option>
+                    <option value = "1">Kendrick Lamar</option>
+                    <option value = "2">Michael Jackson</option>
+                </select>
+            </div>
             <div class="mb-3">
-                <label for="id_pabrik" class="form-label">Pabrik</label>
-                <select class="form-control" id="id_pabrik" name="id_pabrik">
-                    <option value = "1337">Tokyo_Import</option>
-                    <option value = "9224">Semarang</option>
-                    <option value = "9984">Bekasi</option>
+                <label for="id_staff" class="form-label">Staff</label>
+                <select class="form-control" id="id_staff" name="id_staff">
+                    <option disabled selected></option>
+                    <option value = "1">Putra</option>
+                    <option value = "2">Setap</option>
                 </select>
             </div>
             <div class="text-center">
-                <input type="submit" class="btn btn-primary" value="Ubah" />
+                <input type="submit" class="btn btn-primary" value="Tambah" />
             </div>
+            <style>
+                .card-body {
+                font-family: 'Manrope', sans-serif;
+                color: silver;
+                background: #00000d;    
+            }   
+
+                .mb-3 {
+                    color: pink;
+                }
+    </style>
         </form>
     </div>
 </div>
